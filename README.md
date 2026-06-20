@@ -1,8 +1,11 @@
 ![ESP-LM](/media/banner.png)
 
-a tiny language model that runs on an ESP32-C3. it spins up a WiFi access point, you connect from your phone, and chat with it in a browser. no internet, no server, just the chip.
+A tiny language model that runs on an ESP32-C3. it spins up a WiFi access point, you connect from your phone, and chat with it in a browser. no internet, no server, just the chip.
 
-## what it is
+### Usage example (screenshot)
+![usage example](/media/usage-example.png)
+
+## What is it?
 
 3M parameter recurrent LM trained on dialog. not a transformer, no attention. instead it keeps a persistent memory vector that gets gated and decayed at each token step. the whole thing runs on a microcontroller with no FPU.
 
@@ -46,7 +49,7 @@ source .venv/bin/activate
 pip install torch datasets tokenizers tqdm numpy graphviz
 ```
 
-the tokenizer is already trained and committed. if you want to retrain it:
+The tokenizer is already trained and committed. if you want to retrain it:
 
 ```bash
 python tokenizer/__init__.py --vocab-size 2048
@@ -54,7 +57,7 @@ python tokenizer/__init__.py --vocab-size 2048
 
 ## training
 
-pretrain on FineWeb first, then finetune on dialog:
+Pretrain on FineWeb first, then finetune on dialog:
 
 ```bash
 # pretrain (~200 MB of FineWeb, saves checkpoints/pretrain_checkpoint.pt)
@@ -76,9 +79,9 @@ bash test.sh        # exports model.c, compiles chat + test, runs benchmark
 ./test              # generation benchmark (greedy + sampled + seeded)
 ```
 
-## flash to ESP32
+## Flash to ESP32
 
-requires [PlatformIO](https://platformio.org).
+Requires [PlatformIO](https://platformio.org).
 
 ```bash
 # export + build only
@@ -94,20 +97,20 @@ requires [PlatformIO](https://platformio.org).
 ./regenerate.sh --flash --fan
 ```
 
-after flashing, the ESP32 broadcasts a WiFi network called `esp-lm`. join it from any device, open `http://192.168.4.1`, and most phones will redirect automatically via captive portal. tokens stream back token by token over WebSocket.
+After flashing, the ESP32 broadcasts a WiFi network called `esp-lm`. join it from any device, open `http://192.168.4.1`, and most phones will redirect automatically via captive portal. tokens stream back token by token over WebSocket.
 
 ## how it works
 
-each token step:
+Each token step:
 1. embed token
 2. concat with the memory vector, project back to dim
 3. pass through 6 LMBlocks, each one does RMSNorm, gated SiLU (the gate sees both the hidden state and the memory), and writes a delta back to memory
 4. memory update: `mem = decay * mem + (1 - decay) * gate * n_mem`, where `decay` is a learned per-dim value spanning fast-forget to long-term
 5. RMSNorm + tied embedding head = logits
 
-the memory vector carries state across the full conversation. `lm_init()` resets it between users.
+The memory vector carries state across the full conversation. `lm_init()` resets it between users.
 
-on the C side there's no heap allocation and no float in the hot path. weights are int8 in flash, everything else is Q16.16 integer MAC. the SiLU is a 256-entry LUT.
+On the C side there's no heap allocation and no float in the hot path. weights are int8 in flash, everything else is Q16.16 integer MAC. The SiLU is a 256-entry LUT.
 
 ## files you can ignore
 
