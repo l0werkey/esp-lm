@@ -5,7 +5,9 @@ A tiny language model that runs on an ESP32-C3. it spins up a WiFi access point,
 <details>
 
 <summary>Usage example (screenshot)</summary>
+
 ![usage example](/media/usage-example.png)
+
 </details>
 
 ## What is it?
