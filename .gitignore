@@ -1,0 +1,23 @@
+# python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# generated (re-export from checkpoint)
+model/model.c
+model/esp-src/src/model.c
+
+# compiled desktop binaries
+model/chat
+model/test
+
+# platformio build artifacts
+model/esp-src/.pio/
+
+# checkpoints
+model/checkpoints/*.pt
+
+# os / editor
+.DS_Store
+*.swp
