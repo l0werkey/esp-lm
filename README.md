@@ -1,10 +1,6 @@
 ![ESP-LM](/media/banner.png)
 
-# esp-lm
-
 a tiny language model that runs on an ESP32-C3. it spins up a WiFi access point, you connect from your phone, and chat with it in a browser. no internet, no server, just the chip.
-
-![architecture](model/model_arch.svg)
 
 ## what it is
 
