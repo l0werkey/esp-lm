@@ -2,8 +2,11 @@
 
 A tiny language model that runs on an ESP32-C3. it spins up a WiFi access point, you connect from your phone, and chat with it in a browser. no internet, no server, just the chip.
 
-### Usage example (screenshot)
+<details>
+
+<summary>Usage example (screenshot)</summary>
 ![usage example](/media/usage-example.png)
+</details>
 
 ## What is it?
 
@@ -41,7 +44,7 @@ esp-lm/
 └── .venv/
 ```
 
-## setup
+## Setup
 
 ```bash
 python -m venv .venv
